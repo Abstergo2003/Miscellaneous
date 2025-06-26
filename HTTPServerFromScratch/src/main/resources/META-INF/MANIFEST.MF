@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: com.abstergo2003.testserver.testServer
+

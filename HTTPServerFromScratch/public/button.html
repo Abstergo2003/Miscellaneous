@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chose Wisely!!!</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        .button:hover {
+            background-image: url(pressed.png);
+        }
+        @media screen and (min-width: 1000px) {
+            .option {
+                position: absolute;
+                top: 0;
+                width: 50vw;
+                height: 100vh;
+                transition: all .3s ease-in-out;
+            }
+            #option1 {
+                left: 0;
+                background-color: blue;
+            }
+            #option2 {
+                left: 50vw;
+                background-color: red;
+            }
+            .button {
+                position: absolute;
+                top: 50vh;
+                left: 50vw;
+                width: 15vh;
+                height: 15vh;
+                background-image: url(normal.png);
+                z-index: 9999;
+                background-color: transparent;
+                background-size: contain;
+                transform: translate(-50%, -50%);
+            }
+            img {
+                width: 35vw;
+                margin-left: 7.5vw;
+                aspect-ratio: 16/9;
+                margin-top: 10vh;
+            }
+            h1 {
+                text-align: center;
+                color: white;
+                font-size: 6vh;
+            }
+        }
+        @media screen and (max-width: 999px) {
+            .option {
+                position: absolute;
+                left: 0;
+                width: 100vw;
+                height: 50vh;
+                transition: all .3s ease-in-out;
+            }
+            #option1 {
+                top: 0;
+                background-color: blue;
+            }
+            #option2 {
+                top: 50vh;
+                background-color: red;
+            }
+            img {
+                width: 75vw;
+                margin-left: 12.5vw;
+                aspect-ratio: 16/9;
+                margin-top: 10vh;
+            }
+            h1 {
+                text-align: center;
+                color: white;
+                font-size: 6vw;
+            }
+            .button {
+                position: absolute;
+                top: 50vh;
+                left: 50vw;
+                width: 25vw;
+                height: 25vw;
+                background-image: url(normal.png);
+                z-index: 9999;
+                background-color: transparent;
+                background-size: contain;
+                transform: translate(-50%, -50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress"></div>
+    <div class="option" id="option1">
+        <img src="icon.jpg">
+        <h1>Some random description of stupid choices</h1>
+    </div>
+    <div class="button"></div>
+    <div class="option" id="option2">
+        <img src="icon.jpg">
+        <h1>Some random description of stupid choices</h1>
+    </div>
+</body>
+</html>
