@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Read Text File</title>
+    <script src="bundle.js"></script>
+    <script src="main.min.js"></script>
+    <link rel="stylesheet" href="index.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2321115196367092"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Texify your python calculations</h1>
+    <br>
+    <div class="fileInput">Choose file</div>
+    <div class="decimals">
+        <span>Decimals:</span><input type="number" id="decimals" value="4">
+    </div>
+    <br>
+    <div class="container">
+        <div class="adcontainer">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2321115196367092"
+            crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                style="display:inline-block;width:384px;height:700px"
+                data-ad-client="ca-pub-2321115196367092"
+                data-ad-slot="9908542936"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        <pre id="fileContent"></pre>
+        <div class="adcontainer">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2321115196367092"
+            crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                style="display:inline-block;width:384px;height:700px"
+                data-ad-client="ca-pub-2321115196367092"
+                data-ad-slot="9908542936"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+    <h1>How to use</h1>
+    <table>
+        <tr>
+            <td>Command</td>
+            <td>Effect</td>
+        </tr>
+        <tr>
+            <td>#skipx</td>
+            <td>Skips x lines, <span style="color: red">dangerous</span></td>
+        </tr>
+        <tr>
+            <td>Text_abc_</td>
+            <td>Text<sub>abc</sub></td>
+        </tr>
+    </table>
+    <script>
+        for (let symbol of symbols) {
+            let tr = document.createElement('tr');
+            let command = document.createElement('td');
+            command.textContent = symbol;
+            let effect = document.createElement('td');
+            effect.innerHTML = `&${symbol};`;
+            tr.appendChild(command);
+            tr.appendChild(effect);
+            document.querySelector('table').appendChild(tr);
+        }
+        document.querySelector(".fileInput").addEventListener('click', ()=> {
+            let input = document.createElement("input");
+            input.type = 'file';
+            input.accept = '.ipynb';
+            input.click();
+            input.onchange = (event) => {
+                const file = event.target.files[0];
+                document.querySelector('.fileInput').textContent = file.name;
+                document.querySelector('pre').textContent = "";
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        decimals = +document.querySelector("#decimals").value;
+                        console.log(decimals);
+                        let parsed = [];
+                        let helpingMap = {};
+                        const rawData = JSON.parse(e.target.result);
+                        for (var i = 1; i <rawData.cells.length; i++) {
+                            let cell = rawData.cells[i];
+                            if (cell.cell_type === 'code') parseSource(cell.source, parsed, helpingMap);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            }
+        })
+    </script>
+</body>
+</html>
