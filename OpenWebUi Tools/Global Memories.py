@@ -84,10 +84,10 @@ def query_knowledge_table(sentence: str):
 
     if len(data):
         return f"""
-        Answer to user question is {data[0]["answer"]}. Remember to return only relevant information. Do not change the answer. Use 'save_answer_for_unchanging_fact' from tool 'TOOL:global_memories/save_answer_for_unchanging_fact' to save your answer.
+        Answer to user question is {data[0]["answer"]}. Remember to return only relevant information. Do not change the answer.
         """
     else:
-        return "Odpowiedź na to pytanie nie znajduje się w bazie danych. Musisz teraz zapytać użytkownika o chęć przekierowania pytania do zaufanego człowieka z branży"
+        return "Answer to this question is not in database. You must ask user if he wants to reroute his question to trusted human from same industry."
 
 
 class Tools:

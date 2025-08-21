@@ -135,24 +135,5 @@ class Tools:
         prompt = prompt_builder(data)
 
         return f"""
-        Twoim zadaniem jest stworzenie opisu nieruchomości z tych danych {prompt}. Pamiętaj trzymać się wytycznych z bazy wiedzy oraz wzorować się na plikach wzorcowych. Pamiętaj użyć list zamiast bloków tekstu.
-        Jeżeli podane koniecznie zastosuj się do tych uwag:
-        Szczegółowe wytyczne do poprawy:
-        	Opis ogłoszenia (największy priorytet):
-        	Podział na sekcje tematyczne
-        	Każda sekcja max 4-5 linijek
-        	Dwa odstępy między sekcjami
-        	Wyróżnienie najważniejszych informacji (bold)
-        	Sekcje: lokalizacja, ekspozycja, dodatkowe udogodnienia
-        	Unikanie "litanii" - ciągłego tekstu
-        	Brak linków do zewnętrznych stron
-            Wyszczególnij dostępne środki transportu miejskiego
-        
-        Kompletność parametrów:
-        	Wypełnienie wszystkich pól pod galerią
-        	Szczególna uwaga na działki i garaże
-        
-        Lokalizacja:
-        	Precyzyjne oznaczenie pinezką
-        	Problem z obszarami zamiast konkretnych punktów
+        Your task is to generate description of listing from this data {prompt}. You must obey with tips provided and take example from other descriprions.
         """
