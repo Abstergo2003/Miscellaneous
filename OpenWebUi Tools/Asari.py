@@ -3,7 +3,7 @@ title: Asari READ API Integration
 author: Abstergo2003
 author_url: https://github.com/Abstergo2003
 funding_url: https://github.com/Abstergo2003
-version: 1.0.0
+version: 2.0.0
 """
 
 import os
@@ -12,6 +12,7 @@ import urllib.parse
 import datetime
 from pydantic import BaseModel, Field
 import json
+from timeit import default_timer as timer
 
 schema_sources = {
     "ApartmentSale": "zFsreqfo",
@@ -63,7 +64,24 @@ def query_listings(listingID, params):
         return f"Error fetching listing data: {str(e)}"
 
 
-def prompt_builder(data):
+def poi_prompt_builder(data):
+    prompt = []
+    for point in data:
+        # prompt += f"""W pobliżu znajduje się {point["properties"].get("name")}. Na ulicy {point["properties"].get("street")} {point["properties"].get("housenumber")}.
+        # Strona internetowa {point["properties"].get("website")}. Reszta kontaktu może być opisana: {point["properties"].get("contact")}. /n"""
+        prompt.append(
+            {
+                "name": point["properties"].get("name"),
+                "street": f"{point['properties'].get('street')} {point['properties'].get('housenumber')}",
+                "website": point["properties"].get("website"),
+                "contact": point["properties"].get("contact"),
+            }
+        )
+
+    return prompt
+
+
+def description_prompt_builder(data):
     url = ""
     prompt = ""
     sectionName = ""
@@ -109,6 +127,7 @@ class Tools:
     class Valves(BaseModel):
         API_TOKEN: str = Field("", description="Insert API key")
         USER_ID: str = Field("", description="Insert user id")
+        MAP_API_TOKEN: str = Field("", description="Insert Geomapify api key")
 
     def __init__(self):
         self.valves = self.Valves()
@@ -125,15 +144,54 @@ class Tools:
             return """ID has not been specified by user, solisting details can not be retrieved"""
 
         headers = {"SiteAuth": f"{self.valves.USER_ID}:{self.valves.API_TOKEN}"}
-
         id = query_listings(listingID, headers)
 
         base_url = f"https://api.asari.pro/site/listing?id={id}"
 
         data = fetch_listing_data(base_url, headers)
 
-        prompt = prompt_builder(data)
+        prompt = description_prompt_builder(data)
+
+        api_key = self.valves.MAP_API_TOKEN
+        base_url = "https://api.geoapify.com/v2/places?"
+        rad = "5000"
+        response_loc = requests.get(
+            f"""{base_url}apiKey={api_key}&filter=circle:{data["geoLng"]},{data["geoLat"]},{rad}&categories=activity,education,childcare,entertainment"""
+        )
+        data_loc = []
+        if response_loc.status_code == 200:
+            data_loc = response_loc.json()["features"]
+        prompt_loc = poi_prompt_builder(data_loc)
 
         return f"""
-        Your task is to generate description of listing from this data {prompt}. You must obey with tips provided and take example from other descriprions.
+            Twoim zadaniem jest stworzenie opisu nieruchomości z tych danych {prompt}. 
+            Pamiętaj trzymać się wytycznych z bazy wiedzy oraz wzorować się na plikach wzorcowych. 
+            Pamiętaj użyć list zamiast bloków tekstu.
+            
+            Jeżeli podane koniecznie zastosuj się do tych uwag:
+            
+            Szczegółowe wytyczne do poprawy:
+                Opis ogłoszenia (największy priorytet):
+                - Podział na sekcje tematyczne
+                - Każda sekcja max 4-5 linijek
+                - Dwa odstępy między sekcjami
+                - Wyróżnienie najważniejszych informacji (**pogrubienie**)
+                - Sekcje: lokalizacja, ekspozycja, dodatkowe udogodnienia
+                - Unikanie "litanii" - ciągłego tekstu
+                - Brak linków do zewnętrznych stron
+                - Wyszczególnij dostępne środki transportu miejskiego
+            
+            Kompletność parametrów:
+                - Wypełnienie wszystkich pól pod galerią
+                - Szczególna uwaga na działki i garaże
+            
+            Lokalizacja:
+                - Precyzyjne oznaczenie pinezką
+                - Problem z obszarami zamiast konkretnych punktów
+            
+            NEARBY PLACES (already provided, do not request more):
+            Poniżej znajduje się pełna lista pobliskich punktów POI.
+            Nie pytaj o adres ani dokładniejszą lokalizację — masz już wszystkie potrzebne dane.
+            Zapisz te informacje i użyj ich tylko, gdy użytkownik poprosi o szczegóły okolicy.
+            {json.dumps(prompt_loc, indent=4)}
         """
