@@ -189,9 +189,9 @@ class Tools:
                 - Precyzyjne oznaczenie pinezką
                 - Problem z obszarami zamiast konkretnych punktów
             
-            NEARBY PLACES (already provided, do not request more):
-            Poniżej znajduje się pełna lista pobliskich punktów POI.
+            Ważne miejsca w pobliżu (already provided, do not request more):
+            Poniżej znajduje się pełna lista ważnych miejsc w pobliżu.
             Nie pytaj o adres ani dokładniejszą lokalizację — masz już wszystkie potrzebne dane.
-            Zapisz te informacje i użyj ich tylko, gdy użytkownik poprosi o szczegóły okolicy.
+            Wypisz ważne miejsca w okolicy w formie tabelki, podaj wszystkie dostępne informacje: tkaie jak nazwa, adress i kontakt
             {json.dumps(prompt_loc, indent=4)}
         """
